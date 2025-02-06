@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Valentine's Day Surprise</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      font-family: 'Pacifico', cursive;
+      overflow: hidden;
+    }
+    body {
+      background: linear-gradient(135deg, #ff758c, #ff7eb3, #eec0c6, #fad0c4);
+      background-size: 400% 400%;
+      animation: gradient 10s infinite;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .envelope {
+      width: 300px;
+      height: 200px;
+      background: #ffb6c1;
+      border: 3px solid #e6e6e6;
+      border-radius: 12px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.5s ease;
+      text-align: center;
+      font-weight: bold;
+      font-size: 24px;
+      color: #f06292;
+      line-height: 200px;
+    }
+
+    .envelope:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    .letter {
+      display: none;
+      padding: 20px;
+      font-size: 20px;
+      color: #333;
+      text-align: center;
+      background: #ffe4e1;
+      border-radius: 8px;
+      animation: fadeIn 1s ease forwards;
+      font-family: 'Pacifico', cursive;
+    }
+
+    .envelope.open {
+      height: auto;
+      line-height: normal;
+    }
+
+    .envelope.open div {
+      display: none;
+    }
+
+    .envelope.open .letter {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .floating {
+      position: absolute;
+      font-size: 30px;
+      opacity: 0.9;
+      animation: floatDown linear infinite;
+    }
+
+    .heart { color: red; }
+    .butterfly { color: deepskyblue; }
+
+    @keyframes floatDown {
+      0% { transform: translateY(-20vh); }
+      100% { transform: translateY(120vh); }
+    }
+
+    .cupid {
+      width: 50px;
+      height: 50px;
+      background: url('https://via.placeholder.com/50?text=C') no-repeat center center;
+      background-size: contain;
+      position: absolute;
+      animation: floatUpDown 3s ease-in-out infinite;
+    }
+
+    .cupid.top-left { top: 20px; left: 20px; }
+    .cupid.top-right { top: 20px; right: 20px; }
+    .cupid.bottom-left { bottom: 20px; left: 20px; }
+    .cupid.bottom-right { bottom: 20px; right: 20px; }
+
+    @keyframes floatUpDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .initials {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <div id="floating-container"></div>
+  <div class="cupid top-left"></div>
+  <div class="cupid top-right"></div>
+  <div class="cupid bottom-left"></div>
+  <div class="cupid bottom-right"></div>
+
+  <div class="initials">M+T</div>
+
+  <div class="envelope" id="envelope">
+    <div>To Abi</div>
+    <div class="letter">
+      <p>Hopefully this isn’t too little,</p>
+      <p>but will you be my valentine? ❤️</p>
+    </div>
+  </div>
+
+  <audio id="bg-music" src="memories.mp3" loop></audio>
+
+  <script>
+    window.onload = () => {
+      const bgMusic = document.getElementById('bg-music');
+      bgMusic.play().catch(err => console.log("Playback prevented:", err));
+    };
+
+    const envelope = document.getElementById('envelope');
+
+    envelope.addEventListener('click', () => {
+      if (!envelope.classList.contains('open')) {
+        envelope.classList.add('open');
+      }
+    });
+
+    const floatingContainer = document.getElementById('floating-container');
+    const types = ['heart', 'butterfly'];
+    const symbols = {
+      heart: '❤️',
+      butterfly: '🦋'
+    };
+
+    function createFloatingElement(type) {
+      const el = document.createElement('div');
+      el.classList.add('floating', type);
+      el.textContent = symbols[type];
+      el.style.left = Math.random() * 100 + '%';
+      el.style.top = Math.random() * 100 + 'vh';
+      el.style.animationDuration = (3 + Math.random() * 2) + 's';
+      floatingContainer.appendChild(el);
+
+      el.addEventListener('animationend', () => {
+        el.remove();
+        createFloatingElement(type);
+      });
+    }
+
+    function generateFloatingElements() {
+      types.forEach(type => {
+        for (let i = 0; i < 15; i++) {
+          createFloatingElement(type);
+        }
+      });
+    }
+    generateFloatingElements();
+  </script>
+</body>
+</html>
